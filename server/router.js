@@ -12,4 +12,8 @@ router.post('/recipes', controller.postRecipe);
 router.put('/recipes', controller.putRecipe);
 router.delete('/recipes', controller.deleteRecipe);
 
+router.get('/ingredients', controller.getIngredients);
+router.post('/ingredients', controller.postIngredient);
+router.delete('/ingredients', controller.deleteIngredient);
+
 module.exports = router;

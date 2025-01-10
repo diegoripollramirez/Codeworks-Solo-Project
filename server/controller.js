@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const userModel = require('./dataBase/usersModel.js');
 const recipeModel = require('./dataBase/recipeModel.js');
+const ingredientModel = require('./dataBase/ingredientModel.js');
 
 const register = async (req, res) => {
   try {
@@ -14,7 +15,6 @@ const register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists' });
     }
-
     //encrypt password before saving user data
     const encyptedPass = await bcrypt.hash(password, 10);
     const newUser = new userModel({ userName, password: encyptedPass });
@@ -56,12 +56,11 @@ const getRecipes = async (req, res) => {
 
 const postRecipe = async (req, res) => {
   try {
-    const { title, date, venue } = req.body;
-    const newEvent = await Evento.create({ title, date: new Date(date), venue });
-    res.status(201).json(newEvent);
+    const { author, recipeName, instructions, ingredients } = req.body;
+    const newRecipe = await Evento.create({ author, recipeName, instructions, ingredients });
+    res.status(201).json(newRecipe);
   } catch (error) {
-    //POST request should return a 400 HTTP status code in case any parameter is missing
-    res.status(400).json({ error: 'Error Parameters missing' });
+    res.status(400).json({ error: 'Error Parameters of recipe missing' });
   }
 };
 
@@ -84,4 +83,28 @@ const deleteRecipe = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getRecipes, postRecipe, putRecipe, deleteRecipe };
+const getIngredients = async (req, res) => {
+  try {
+    const ingredients = await recipeModel.find();
+    res.status(200).json(ingredients);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching ingredients' });
+  }
+};
+
+const postIngredient = async (req, res) => {
+  try {
+    const { ingredientName, unit } = req.body;
+    const newIngredient = await ingredientModel.create({ ingredientName, unit });
+    res.status(201).json(newIngredient);
+  } catch (error) {
+    res.status(400).json({ error: 'Error Parameters of ingredient missing' });
+  }
+};
+
+const deleteIngredient = async (req, res) => {
+
+};
+
+
+module.exports = { register, login, getRecipes, postRecipe, putRecipe, deleteRecipe, getIngredients, postIngredient, deleteIngredient };

@@ -2,9 +2,8 @@ import React from 'react'
 import { useState } from 'react';
 
 
-const login = ({ logged, setLogin }) => {
+const login = ({ setLogin, userName, setUserName }) => {
   const [isLogin, setIsLogin] = useState(false);
-  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   const postForm = async () => {

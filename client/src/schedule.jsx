@@ -11,7 +11,7 @@ const schedule = ({ recipes, setRecipes, selectedMeals, setSelectedMeals }) => {
       const result = await response.json();
       setRecipes(result);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching recipes:', error);
     }
   };
 

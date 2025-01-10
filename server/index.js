@@ -6,6 +6,9 @@ const cors = require('cors');
 const connection = require('./dataBase/connection.js');
 const router = require('./router.js');
 
+const hostname = "127.0.0.1";
+const port= 3000;
+
 app.use(cors());
 app.use(express.json());
 app.use(router);
@@ -17,7 +20,7 @@ app.get("/", function (req, res) {
 
 async function startServer() {
   await connection();
-  app.listen(3000, function () {
-    console.log("Aplicación ejemplo, escuchando el puerto 3000!");
+  app.listen(port, function () {
+    console.log(`Server running at http://${hostname}:${port}/`);
   })
 };startServer();

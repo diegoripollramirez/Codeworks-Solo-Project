@@ -5,10 +5,11 @@ import { useState } from 'react';
 import Login from './login';
 import Schedule from './schedule';
 import ShoppingList from './shoppingList';
-import Recipes from './recipes';
+import RecipesSection from './recipes';
 
 function App() {
   const [logged, setLogin] = useState(false);
+  const [userName, setUserName] = useState("");
   const [currentTab, setCurrentTab] = useState('schedule');
   const [recipes, setRecipes] = useState([]);
   const [selectedMeals, setSelectedMeals] = useState([
@@ -27,7 +28,7 @@ function App() {
     } else if (currentTab === 'shoppingList') {
       return <ShoppingList selectedMeals={selectedMeals}/>;
     } else if (currentTab === 'recipes') {
-      return <Recipes />;
+      return <RecipesSection recipes={recipes} setRecipes={setRecipes} userName={userName}/>;
     } else {
       return null;
     }
@@ -36,7 +37,7 @@ function App() {
   return (
     <div>
       {!logged ? (
-        <Login setLogin={setLogin} />
+        <Login setLogin={setLogin} userName={userName} setUserName={setUserName}/>
       ) : (
         <div>
           <nav>
