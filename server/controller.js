@@ -56,8 +56,9 @@ const getRecipes = async (req, res) => {
 
 const postRecipe = async (req, res) => {
   try {
+    console.log (req.body)
     const { author, recipeName, instructions, ingredients } = req.body;
-    const newRecipe = await Evento.create({ author, recipeName, instructions, ingredients });
+    const newRecipe = await recipeModel.create({ author, recipeName, instructions, ingredients });
     res.status(201).json(newRecipe);
   } catch (error) {
     res.status(400).json({ error: 'Error Parameters of recipe missing' });
@@ -71,7 +72,7 @@ const putRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
   try {
     const { _id } = req.body;
-    const deleted = await Evento.findByIdAndDelete(_id);
+    const deleted = await recipeModel.findByIdAndDelete(_id);
 
     if (deleted) {
       res.status(200).json({ message: 'Expired Event deleted' });
@@ -85,7 +86,7 @@ const deleteRecipe = async (req, res) => {
 
 const getIngredients = async (req, res) => {
   try {
-    const ingredients = await recipeModel.find();
+    const ingredients = await ingredientModel.find();
     res.status(200).json(ingredients);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching ingredients' });

@@ -4,21 +4,37 @@ import { useEffect, useState } from 'react';
 const recipesSection = ({ userName, recipes, setRecipes }) => {
   const [editingMode, setEditingMode] = useState(false);
   const [ingredients, setIngredients] = useState([]);
-
   const [newRecipe, setNewRecipe] = useState({
     recipeName: "",
     author: userName,
     ingredients: [],
     instructions: [],
   });
+  const [newIngredient, setNewIngredient] = useState({
+    ingredientName: "",
+    unit: "",
+    quantity: "",
+  });
+  const [newInstruction, setNewInstruction] = useState({
+    minutes: "",
+    text: "",
+  });
 
   const postRecipe = async (newRecipe) => {
+    const existingRecipe = recipes.find(
+      (recipe) => recipe.recipeName === newRecipe.recipeName
+    );
+    if (existingRecipe) {
+      alert("Recipe with this name already exists!");
+      return;
+    }
+
     const url = "http://localhost:3000/recipes";
     try {
       const postResponse = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ newRecipe }),
+        body: JSON.stringify(newRecipe),
       });
       const data = await postResponse.json();
       setRecipes((prev) => [...prev, data]);
@@ -28,6 +44,7 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
     }
   };
 
+  // Need an ingredients list to sum their amounts and avoid same ingredient with diferent names (spaghetti, spagheti,spagetti) or different units (grams, g., kg)
   const getIngredients = async () => {
     const url = 'http://localhost:3000/ingredients';
     try {
@@ -38,7 +55,6 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
       console.error('Error fetching ingredients:', error);
     }
   };
-
   useEffect(() => {
     getIngredients();
   }, []);
@@ -58,37 +74,42 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
     }
   };
 
-  const addIngredientToRecipe = (ingredientName, unit, quantity) => {
-    const existingIngredient = ingredients.find(
-      (ingredient) => ingredient.ingredientName === ingredientName
-    );
-    if (!existingIngredient) {
-      postIngredient(ingredientName, unit);
-    }
-    setNewRecipe((prev) => ({
-      ...prev,
-      ingredients: [...prev.ingredients, [ingredientName, unit, quantity]],
-    }));
-  };
-
-
-  const handleRecipeNameChange = (e) => {
+  const addNameToRecipe = (e) => {
     setNewRecipe((prev) => ({
       ...prev,
       recipeName: e.target.value,
     }));
   };
 
-  const handleInstructionChange = (index, value, field) => {
-    setNewRecipe((prev) => {
-      const updatedInstructions = [...prev.instructions];
-      updatedInstructions[index] = updatedInstructions[index] || {};
-      updatedInstructions[index][field] = value;
-      return {
-        ...prev,
-        instructions: updatedInstructions,
-      };
-    });
+  //Not using inline handlers to avoid the creation of the funcionts each time the comoponent is rerendered
+  const handleIngredientChange = (formField, value) => {
+    setNewIngredient((prev) => ({ ...prev, [formField]: value }));
+  };
+
+  const addIngredientToRecipe = () => { //and to the db if does not exist
+    const existingIngredient = ingredients.find(
+      (ingredient) => ingredient.ingredientName === newIngredient.ingredientName
+    );
+    if (!existingIngredient) {
+      postIngredient(newIngredient.ingredientName, newIngredient.unit);
+    }
+    setNewRecipe((prev) => ({
+      ...prev,
+      ingredients: [...prev.ingredients, newIngredient],
+    }));
+    setNewIngredient({ ingredientName: "", unit: "", quantity: "" }); //clear values
+  };
+
+  const handleInstructionChange = (formField, value) => {
+    setNewInstruction((prev) => ({ ...prev, [formField]: value }));
+  };
+
+  const addInstructionToRecipe = () => {
+    setNewRecipe((prev) => ({
+      ...prev,
+      instructions: [...prev.instructions, newInstruction],
+    }));
+    setNewInstruction({ minutes: "", text: "" }); //clear values
   };
 
   return (
@@ -102,87 +123,113 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
               postRecipe(newRecipe);
             }}
           >
-            <label htmlFor="recipeName">Recipe name</label>
-            <input
-              type="text"
-              name="recipeName"
-              value={newRecipe.recipeName}
-              onChange={handleRecipeNameChange} // Actualiza el estado correctamente
-            />
-            <br />
-            <label htmlFor="ingredients">Add Ingredients</label>
-            <div>
+
+<br />
+
+            <div className="recipeName">
+              <label htmlFor="recipeName">Recipe name</label>
               <input
                 type="text"
-                placeholder="Ingredient Name"
+                name="recipeName"
+                value={newRecipe.recipeName}
+                onChange={addNameToRecipe}
+              />
+            </div>
+
+<br />
+
+            <div className="ingredients">
+              <label htmlFor="ingredients">Ingredients</label>
+
+              <input
+                type="text"
+                placeholder="Ingredient name"
                 list="ingredientList"
                 id="ingredientName"
+                value={newIngredient.ingredientName}
+                onChange={(e) => handleIngredientChange("ingredientName", e.target.value)}
               />
               <datalist id="ingredientList">
                 {ingredients.map((ing, index) => (
                   <option key={index} value={ing.ingredientName} />
                 ))}
               </datalist>
-              <input type="text" placeholder="Unit" id="unit" />
-              <input type="number" placeholder="Quantity" id="quantity" />
+
+              <input
+                type="number"
+                placeholder="Quantity"
+                id="quantity"
+                value={newIngredient.quantity}
+                onChange={(e) => handleIngredientChange("quantity", e.target.value)}
+              />
+
+              <input
+                type="text"
+                placeholder="Unit of measurement"
+                id="unit"
+                value={newIngredient.unit}
+                onChange={(e) => handleIngredientChange("unit", e.target.value)}
+              />
+
               <button
                 type="button"
                 onClick={() =>
-                  addIngredientToRecipe(
-                    document.getElementById("ingredientName").value,
-                    document.getElementById("unit").value,
-                    document.getElementById("quantity").value
-                  )
+                  addIngredientToRecipe()
                 }
-              >
-                Add Ingredient
+              > Add Ingredient
               </button>
+
+              <ul>
+                {newRecipe.ingredients.map((ingredient, index) => (
+                  <li key={index}>
+                    {ingredient.quantity} {ingredient.unit} of {ingredient.ingredientName}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul>
-              {newRecipe.ingredients.map((ingredient, index) => (
-                <li key={index}>
-                  {ingredient[2]} {ingredient[1]} of {ingredient[0]}
-                </li>
-              ))}
-            </ul>
-            <br />
-            <label htmlFor="instructions">Instructions</label>
-            <div>
-              {newRecipe.instructions.map((instruction, index) => (
-                <div key={index}>
-                  <input
-                    type="number"
-                    placeholder="Minutes"
-                    value={instruction.minutes || ""}
-                    onChange={(e) =>
-                      handleInstructionChange(index, e.target.value, "minutes")
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="Instruction"
-                    value={instruction.text || ""}
-                    onChange={(e) =>
-                      handleInstructionChange(index, e.target.value, "text")
-                    }
-                  />
-                </div>
-              ))}
+
+<br />
+
+            <div className="instructions">
+              <label htmlFor="instructions">Instructions</label>
+              <input
+                type="number"
+                placeholder="Minutes"
+                id="minutes"
+                value={newInstruction.minutes}
+                onChange={(e) => handleInstructionChange("minutes", e.target.value)}
+              />
+
+              <input
+                type="text"
+                placeholder="Text"
+                id="text"
+                value={newInstruction.text}
+                onChange={(e) => handleInstructionChange("text", e.target.value)}
+              />
+
               <button
                 type="button"
                 onClick={() =>
-                  setNewRecipe((prev) => ({
-                    ...prev,
-                    instructions: [...prev.instructions, { minutes: "", text: "" }],
-                  }))
+                  addInstructionToRecipe()
                 }
-              >
-                Add Instruction
+              > Add Instruction
               </button>
+
+              <ul>
+                {newRecipe.instructions.map((instruction, index) => (
+                  <li key={index}>
+                    {instruction.minutes} minutes: {instruction.text}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <br />
+
+<br />
+
             <button type="submit">Save</button>
           </form>
+
           <button onClick={() => setEditingMode(false)}>Cancel</button>
         </div>
       ) : (
@@ -205,7 +252,9 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
                 <h3>Instructions</h3>
                 <ol>
                   {recipe.instructions.map((instruction, index) => (
-                    <li key={index}>{instruction}</li>
+                    <li key={index}>
+                      {instruction.minutes} {instruction.text}
+                    </li>
                   ))}
                 </ol>
                 <button onClick={() => setEditingMode(true)}>Edit</button>

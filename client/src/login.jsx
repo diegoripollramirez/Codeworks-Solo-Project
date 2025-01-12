@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 
 const login = ({ setLogin, userName, setUserName }) => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [password, setPassword] = useState("");
 
   const postForm = async () => {
