@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   userName: { type: String, required: true },
   password: { type: String, required: true },
+  mealShedule: { type: Array },
 }, { timestamps: false });
 
 // Crear el modelo a partir del esquema

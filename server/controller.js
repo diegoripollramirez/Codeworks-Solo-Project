@@ -9,7 +9,7 @@ const ingredientModel = require('./dataBase/ingredientModel.js');
 const register = async (req, res) => {
   try {
     const { userName, password } = req.body;
-//TODO sanitize user input
+    //TODO sanitize user input
     //Check if user already exists
     const existingUser = await userModel.findOne({ userName });
     if (existingUser) {
@@ -31,16 +31,44 @@ const login = async (req, res) => {
     //TODO sanitize user input
     const user = await userModel.findOne({ 'userName': userName });
     if (!user) {
-      return res.status(400).json({ logged: false, message: 'User not found in data base' });
+      return res.status(400).json({ error: 'User not found in data base' });
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
       res.status(200).json({ logged: true });
     } else {
-      res.status(401).json({ logged: false, message: 'Invalid password' });
+      res.status(401).json({ error: 'Invalid password' });
     }
   } catch (error) {
     res.status(400).json({ error: 'Error Parameters missing' });
+  }
+};
+
+const getSchedule = async (req, res) => {
+  try {
+    const { userName } = req.params;
+    const schedule = await userModel.findOne({ userName });
+    res.status(200).json(schedule.mealShedule);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching schedule' });
+  }
+};
+
+const postSchedule = async (req, res) => {
+  try {
+    //TODO sanitize user input
+    const { selectedMeals } = req.body;
+    const { userName } = req.params;
+    const updatedUser = await userModel.updateOne(
+      { userName },
+      { mealShedule: selectedMeals }
+    );
+    if (updatedUser.matchedCount === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(201).json({ message: "Schedule updated successfully", updatedUser });
+  } catch (error) {
+    res.status(400).json({ error: 'Parameters of recipe missing' });
   }
 };
 
@@ -56,31 +84,29 @@ const getRecipes = async (req, res) => {
 
 const postRecipe = async (req, res) => {
   try {
-    console.log (req.body)
+    //TODO sanitize user input
     const { author, recipeName, instructions, ingredients } = req.body;
     const newRecipe = await recipeModel.create({ author, recipeName, instructions, ingredients });
     res.status(201).json(newRecipe);
   } catch (error) {
-    res.status(400).json({ error: 'Error Parameters of recipe missing' });
+    res.status(400).json({ error: 'Parameters of recipe missing' });
   }
 };
 
 const putRecipe = async (req, res) => {
-
+//TODO should we be able to edit recipes or just create and delete them?
 };
 
 const deleteRecipe = async (req, res) => {
   try {
-    const { _id } = req.body;
-    const deleted = await recipeModel.findByIdAndDelete(_id);
-
-    if (deleted) {
-      res.status(200).json({ message: 'Expired Event deleted' });
-    } else {
-      res.status(404).json({ error: 'Expired event not found' });
+    const { _id } = req.params;
+    const deletedRecipe = await recipeModel.findOneAndDelete({ _id });
+    if (!deletedRecipe) {
+      return res.status(404).json({ error: "Recipe not found" });
     }
+    res.status(200).json({ message: "Recipe deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting expired event' });
+    res.status(500).json({ error: "An error occurred while deleting the recipe" });
   }
 };
 
@@ -103,9 +129,4 @@ const postIngredient = async (req, res) => {
   }
 };
 
-const deleteIngredient = async (req, res) => {
-
-};
-
-
-module.exports = { register, login, getRecipes, postRecipe, putRecipe, deleteRecipe, getIngredients, postIngredient, deleteIngredient };
+module.exports = { register, login, getSchedule, postSchedule, getRecipes, postRecipe, putRecipe, deleteRecipe, getIngredients, postIngredient };

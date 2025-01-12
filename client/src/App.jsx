@@ -24,7 +24,7 @@ function App() {
 
   function renderTab(currentTab) {
     if (currentTab === 'schedule') {
-      return  <Schedule recipes={recipes} setRecipes={setRecipes} selectedMeals={selectedMeals} setSelectedMeals={setSelectedMeals} />;
+      return  <Schedule userName={userName} recipes={recipes} setRecipes={setRecipes} selectedMeals={selectedMeals} setSelectedMeals={setSelectedMeals} />;
     } else if (currentTab === 'shoppingList') {
       return <ShoppingList selectedMeals={selectedMeals}/>;
     } else if (currentTab === 'recipes') {

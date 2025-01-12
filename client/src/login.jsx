@@ -23,7 +23,8 @@ const login = ({ setLogin, userName, setUserName }) => {
         }),
       });
       if (!postResponse.ok) {
-        throw new Error(`Error HTTP: ${postResponse.status}`);
+        const errorData = await postResponse.json();
+        alert(`Error: ${errorData.error || 'An unknown error occurred'}`);
       }
       const data = await postResponse.json();
       setLogin(data.logged);

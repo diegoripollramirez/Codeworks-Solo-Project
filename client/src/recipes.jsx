@@ -36,11 +36,16 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newRecipe),
       });
+      if (!postResponse.ok) {
+        const errorData = await postResponse.json();
+        alert(`Error: ${errorData.error || 'An unknown error occurred'}`);
+        return;
+      }
       const data = await postResponse.json();
       setRecipes((prev) => [...prev, data]);
       setEditingMode(false);
     } catch (error) {
-      console.error("Error creating ingredient:", error);
+      console.error("Error creating recipe:", error);
     }
   };
 
@@ -83,6 +88,7 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
 
   //Not using inline handlers to avoid the creation of the funcionts each time the comoponent is rerendered
   const handleIngredientChange = (formField, value) => {
+
     setNewIngredient((prev) => ({ ...prev, [formField]: value }));
   };
 
@@ -112,6 +118,23 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
     setNewInstruction({ minutes: "", text: "" }); //clear values
   };
 
+  const deleteRecipes = async (_id) => {
+    const url = `http://localhost:3000/recipes/${encodeURIComponent(_id)}`;
+    try {
+      const postResponse = await fetch(url, {
+        method: "DELETE",
+      });
+      if (!postResponse.ok) {
+        const errorData = await postResponse.json();
+        alert(`Error: ${errorData.error || 'An unknown error occurred'}`);
+        return;
+      }
+      setRecipes((prev) => prev.filter((recipe) => recipe._id !== _id));
+    } catch (error) {
+      console.error("Error deleting the recipe:", error);
+    }
+  }
+
   return (
     <>
       {editingMode ? (
@@ -124,7 +147,7 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
             }}
           >
 
-<br />
+            <br />
 
             <div className="recipeName">
               <label htmlFor="recipeName">Recipe name</label>
@@ -136,7 +159,7 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
               />
             </div>
 
-<br />
+            <br />
 
             <div className="ingredients">
               <label htmlFor="ingredients">Ingredients</label>
@@ -147,7 +170,11 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
                 list="ingredientList"
                 id="ingredientName"
                 value={newIngredient.ingredientName}
-                onChange={(e) => handleIngredientChange("ingredientName", e.target.value)}
+                onChange={(e) => {
+                  const knownIngredient = ingredients.find(ingredient => ingredient.e.target.value === e.target.value);
+                  handleIngredientChange("ingredientName", e.target.value);
+                  if (knownIngredient) { handleIngredientChange("unit", knownIngredient.unit); }//set unit here to disable the field if known ingredient
+                }}
               />
               <datalist id="ingredientList">
                 {ingredients.map((ing, index) => (
@@ -167,28 +194,33 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
                 type="text"
                 placeholder="Unit of measurement"
                 id="unit"
-                value={newIngredient.unit}
+                value={
+                  ingredients.find(ingredient => ingredient.ingredientName === newIngredient.ingredientName)
+                    ? ingredients.find(ingredient => ingredient.ingredientName === newIngredient.ingredientName).unit
+                    : newIngredient.unit
+                }
                 onChange={(e) => handleIngredientChange("unit", e.target.value)}
+                disabled={!!ingredients.find(ingredient => ingredient.ingredientName === newIngredient.ingredientName)}
               />
 
               <button
                 type="button"
-                onClick={() =>
-                  addIngredientToRecipe()
-                }
+                onClick={() => addIngredientToRecipe()}
               > Add Ingredient
               </button>
 
               <ul>
                 {newRecipe.ingredients.map((ingredient, index) => (
                   <li key={index}>
-                    {ingredient.quantity} {ingredient.unit} of {ingredient.ingredientName}
+                    {ingredient.unit !== ""
+                      ? `${ingredient.quantity} ${ingredient.unit} of ${ingredient.ingredientName}`
+                      : `${ingredient.quantity} ${ingredient.ingredientName}`}
                   </li>
                 ))}
               </ul>
             </div>
 
-<br />
+            <br />
 
             <div className="instructions">
               <label htmlFor="instructions">Instructions</label>
@@ -225,12 +257,20 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
               </ul>
             </div>
 
-<br />
+            <br />
 
             <button type="submit">Save</button>
           </form>
 
-          <button onClick={() => setEditingMode(false)}>Cancel</button>
+          <button onClick={() => {
+            setNewRecipe({
+              recipeName: "",
+              author: userName,
+              instructions: [],
+              ingredients: [],
+            });
+            setEditingMode(false)
+          }}>Cancel</button>
         </div>
       ) : (
         <div className="RecipeList">
@@ -244,8 +284,9 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
                 <ul>
                   {recipe.ingredients.map((ingredient, index) => (
                     <li key={index}>
-                      {ingredient.quantity} {ingredient.unit} of{" "}
-                      {ingredient.ingredientName}
+                      {ingredient.unit !== ""
+                        ? `${ingredient.quantity} ${ingredient.unit} of ${ingredient.ingredientName}`
+                        : `${ingredient.quantity} ${ingredient.ingredientName}`}
                     </li>
                   ))}
                 </ul>
@@ -253,11 +294,13 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
                 <ol>
                   {recipe.instructions.map((instruction, index) => (
                     <li key={index}>
-                      {instruction.minutes} {instruction.text}
+                      {instruction.minutes} minutes: {instruction.text}
                     </li>
                   ))}
                 </ol>
-                <button onClick={() => setEditingMode(true)}>Edit</button>
+
+                <button onClick={() => { deleteRecipes(recipe._id) }
+                }>Delete</button>
               </li>
             ))}
           </ul>

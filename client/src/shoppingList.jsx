@@ -7,15 +7,28 @@ const shoppingList = ({ selectedMeals }) => {
   let meals = allMeals.filter((recipe) => recipe && recipe.ingredients);//check if ingredients to avboid bringing the "Select Recipe" recipes
   let ingredients = meals.flatMap((recipe) => recipe.ingredients)
 
+  const grouped = ingredients.reduce((acc, current) => {
+    const existing = acc.find(ingredient => ingredient.ingredientName === current.ingredientName);
+    if (existing) {
+      existing.quantity += Number(current.quantity);
+    } else {
+      acc.push({ ...current, quantity: Number(current.quantity) });
+    }
+    return acc;
+  }, []);
 
   return (
     <>
-      {ingredients.length > 0
+      {grouped.length > 0
         ? <ul>
-          {ingredients.map((ingredient, index) => (
+          {grouped.map((ingredient, index) => (
             <li key={index}>
               <input type="checkbox" id={`ingredient-${index}`} />
-              <label htmlFor={`ingredient-${index}`}>{ingredient}</label>
+              {ingredient.unit !== ""
+                ? `${ingredient.quantity} ${ingredient.unit} of ${ingredient.ingredientName}`
+                : ingredient.quantity && ingredient.quantity !== "0"
+                  ? `${ingredient.quantity} ${ingredient.ingredientName}`
+                  : `${ingredient.ingredientName}`}
             </li>
           ))}
         </ul>
