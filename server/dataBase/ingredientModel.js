@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 // Definir el esquema del modelo
 const ingredientsSchema = new mongoose.Schema({
   ingredientName: { type: String, required: true },
-  unit: { type: String},
+  unit: { type: String },
 }, { timestamps: false });
 
 // Crear el modelo a partir del esquema

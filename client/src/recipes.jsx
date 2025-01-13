@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 
-const recipesSection = ({ userName, recipes, setRecipes }) => {
+const recipesSection = ({ userName, recipes, setRecipes, searchText, setSearchText }) => {
   const [editingMode, setEditingMode] = useState(false);
   const [ingredients, setIngredients] = useState([]);
   const [newRecipe, setNewRecipe] = useState({
@@ -19,6 +19,7 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
     minutes: "",
     text: "",
   });
+
 
   const postRecipe = async (newRecipe) => {
     const existingRecipe = recipes.find(
@@ -135,6 +136,11 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
     }
   }
 
+
+  const filteredRecipes = recipes.filter((recipe) =>
+    recipe.recipeName.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <>
       {editingMode ? (
@@ -171,9 +177,13 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
                 id="ingredientName"
                 value={newIngredient.ingredientName}
                 onChange={(e) => {
-                  const knownIngredient = ingredients.find(ingredient => ingredient.e.target.value === e.target.value);
+                  const knownIngredient = ingredients.find(
+                    (ingredient) => ingredient.ingredientName === e.target.value
+                  );
                   handleIngredientChange("ingredientName", e.target.value);
-                  if (knownIngredient) { handleIngredientChange("unit", knownIngredient.unit); }//set unit here to disable the field if known ingredient
+                  if (knownIngredient) {
+                    handleIngredientChange("unit", knownIngredient.unit); // Set unit if known ingredient
+                  }
                 }}
               />
               <datalist id="ingredientList">
@@ -275,9 +285,17 @@ const recipesSection = ({ userName, recipes, setRecipes }) => {
       ) : (
         <div className="RecipeList">
           <h1>List of Recipes</h1>
+          <input
+            type="text"
+            placeholder="Search recipe"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <br />
           <button onClick={() => setEditingMode(true)}>New Recipe</button>
+
           <ul>
-            {recipes.map((recipe, index) => (
+            {filteredRecipes.map((recipe, index) => (
               <li key={index}>
                 <h2>{recipe.recipeName}</h2>
                 <h3>Ingredients</h3>

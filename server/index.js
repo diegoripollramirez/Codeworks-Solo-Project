@@ -7,7 +7,7 @@ const connection = require('./dataBase/connection.js');
 const router = require('./router.js');
 
 const hostname = "127.0.0.1";
-const port= 3000;
+const port = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -23,4 +23,4 @@ async function startServer() {
   app.listen(port, function () {
     console.log(`Server running at http://${hostname}:${port}/`);
   })
-};startServer();
+}; startServer();

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 
 
-const login = ({ setLogin, userName, setUserName }) => {
+const login = ({ setLogin, userName, setUserName, setSelectedMeals }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [password, setPassword] = useState("");
 
@@ -10,7 +10,7 @@ const login = ({ setLogin, userName, setUserName }) => {
     let url;
     if (isLogin) {
       url = 'http://localhost:3000/login';
-    }else{
+    } else {
       url = 'http://localhost:3000/register';
     }
     try {
@@ -33,15 +33,27 @@ const login = ({ setLogin, userName, setUserName }) => {
     }
   };
 
+  const getSchedule = async () => {
+    const url = `http://localhost:3000/schedule/${encodeURIComponent(userName)}`;
+    try {
+      const response = await fetch(url);
+      const result = await response.json();
+      setSelectedMeals(result);
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     postForm();
+    getSchedule()
   };
 
   return (
     <>
       <form className='loginForm' onSubmit={handleSubmit}>
-      <h2>{isLogin ? 'Log in' : 'Register'}</h2>
+        <h2>{isLogin ? 'Log in' : 'Register'}</h2>
         <div className='user'>
           <label htmlFor="userName">Username:</label>
           <input

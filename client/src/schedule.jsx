@@ -1,7 +1,8 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMeals }) => {
+
+const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMeals, setCurrentTab, setSearchText }) => {
 
 
   const getRecipes = async () => {
@@ -15,21 +16,8 @@ const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMea
     }
   };
 
-  const getSchedule = async () => {
-    const url = `http://localhost:3000/schedule/${encodeURIComponent(userName)}`;
-    try {
-      const response = await fetch(url);
-      const result = await response.json();
-      setSelectedMeals(result);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    }
-  };
-
-
   useEffect(() => {
     getRecipes();
-    getSchedule();
   }, []);
 
   const postSchedule = async () => {
@@ -86,6 +74,17 @@ const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMea
                     </option>
                   ))}
                 </select>
+                <button
+                type="button"
+                onClick={() => {
+                  const selectedRecipe = recipes.find(recipe => recipe._id === selectedMeals[dayIndex][mealIndex]?._id);
+                  if (selectedRecipe) {
+                    setSearchText(selectedRecipe.recipeName)
+                    setCurrentTab('recipes')
+                  }
+                }}
+              >Go to Recipe
+              </button>
               </div>
             </li>
           ))

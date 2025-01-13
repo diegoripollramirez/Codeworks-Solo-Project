@@ -17,4 +17,4 @@ async function connection() {
 };
 
 //Exportar la conexion con mongoose
-module.exports =  connection;
+module.exports = connection;
