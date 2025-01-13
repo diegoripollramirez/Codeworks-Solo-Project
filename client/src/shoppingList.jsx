@@ -18,6 +18,7 @@ const shoppingList = ({ selectedMeals }) => {
 
   return (
     <>
+    <h1>Shopping list</h1>
       {grouped.length > 0
         ? <ul>
           {grouped.map((ingredient, index) => (

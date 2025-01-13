@@ -20,7 +20,7 @@ const register = async (req, res) => {
     const encyptedPass = await bcrypt.hash(password, 10);
     const newUser = new userModel({ userName, password: encyptedPass });
     await newUser.save()
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ logged: true });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(400).json({ error: 'Error creating user' });

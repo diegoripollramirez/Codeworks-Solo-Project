@@ -3,12 +3,12 @@ import { useState } from 'react';
 
 
 const login = ({ setLogin, userName, setUserName, setSelectedMeals }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [loginOrRegister, setloginOrRegister] = useState(true);
   const [password, setPassword] = useState("");
 
   const postForm = async () => {
     let url;
-    if (isLogin) {
+    if (loginOrRegister) {
       url = 'http://localhost:3000/login';
     } else {
       url = 'http://localhost:3000/register';
@@ -28,6 +28,7 @@ const login = ({ setLogin, userName, setUserName, setSelectedMeals }) => {
       }
       const data = await postResponse.json();
       setLogin(data.logged);
+      await getSchedule();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -44,16 +45,21 @@ const login = ({ setLogin, userName, setUserName, setSelectedMeals }) => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    postForm();
-    getSchedule()
+    await postForm();
+
+  };
+
+  const handleToggleMode = (event) => {
+    event.preventDefault();
+    setloginOrRegister((prev) => !prev);
   };
 
   return (
     <>
       <form className='loginForm' onSubmit={handleSubmit}>
-        <h2>{isLogin ? 'Log in' : 'Register'}</h2>
+        <h2>{loginOrRegister ? 'Log in' : 'Register'}</h2>
         <div className='user'>
           <label htmlFor="userName">Username:</label>
           <input
@@ -76,14 +82,15 @@ const login = ({ setLogin, userName, setUserName, setSelectedMeals }) => {
             required
           />
         </div>
-        <button type="submit">{isLogin ? 'Log in' : 'Register'}</button>
+        <button type="submit">{loginOrRegister ? 'Log in' : 'Register'}</button>
+        <button
+          className='toggleButton'
+          onClick={handleToggleMode}
+        >
+          {loginOrRegister ? 'Create account' : 'Already registered'}
+        </button>
       </form>
-      <button
-        className='toggleButton'
-        onClick={() => setIsLogin((prev) => !prev)}
-      >
-        {isLogin ? 'Switch to Register' : 'Switch to Log in'}
-      </button>
+
     </>
   );
 };

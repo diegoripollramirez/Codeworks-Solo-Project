@@ -1,6 +1,71 @@
+.loginForm {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loginForm h2 {
+  text-align: center;
+}
+
+.loginForm .user,
+.loginForm .password {
+  margin-bottom: 15px;
+}
+
+.loginForm label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: black;
+}
+
+.loginForm input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.loginForm button {
+  width: 100%;
+  padding: 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.toggleButton {
+  width: 100%;
+  padding: 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.loginForm button:hover,
+.toggleButton:hover{
+  font-weight: bold;
+}
+
+
+
+
+
+
 .daysCalendar {
   display: flex;
-  flex-wrap: wrap; /* Permite que los días se envuelvan si hay demasiados para caber en una sola fila */
+  flex-wrap: wrap;
   justify-content: space-between;
   list-style-type: none;
   padding: 0;
@@ -8,8 +73,11 @@
 
 .daysCalendar li {
   margin: 10px;
-  width: calc(100% / 7 - 20px); /* Para hacer que los días ocupen igual espacio en una fila */
+  width: calc(100% / 7 - 20px);
   text-align: center;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .daysCalendar h1 {
@@ -26,6 +94,11 @@ button {
 }
 
 button:hover {
-  background-color: #007bff;
+  background-color: blue;
   color: white;
+}
+
+.saveScheduleButton{
+position: relative;
+left: 45%;
 }
