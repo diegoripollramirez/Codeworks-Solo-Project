@@ -20,7 +20,7 @@ const shoppingList = ({ selectedMeals }) => {
     <>
     <h1>Shopping list</h1>
       {grouped.length > 0
-        ? <ul>
+        ? <ul className='ingredient'>
           {grouped.map((ingredient, index) => (
             <li key={index}>
               <input type="checkbox" id={`ingredient-${index}`} />
@@ -32,7 +32,7 @@ const shoppingList = ({ selectedMeals }) => {
             </li>
           ))}
         </ul>
-        : <p>Add recipes to the calendar to see the needed ingredients.</p>
+        : <p className='noList'>Add recipes to the calendar to see the needed ingredients.</p>
       }
     </>
   )

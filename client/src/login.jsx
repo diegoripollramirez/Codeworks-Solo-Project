@@ -1,54 +1,26 @@
 import React from 'react'
 import { useState } from 'react';
-
+import { loginRegister, getSchedule } from './services/userServices';
 
 const login = ({ setLogin, userName, setUserName, setSelectedMeals }) => {
   const [loginOrRegister, setloginOrRegister] = useState(true);
   const [password, setPassword] = useState("");
 
-  const postForm = async () => {
-    let url;
-    if (loginOrRegister) {
-      url = 'http://localhost:3000/login';
-    } else {
-      url = 'http://localhost:3000/register';
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = loginOrRegister
+      ? 'http://localhost:3000/login'
+      : 'http://localhost:3000/register';
+
     try {
-      const postResponse = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userName: userName,
-          password: password,
-        }),
-      });
-      if (!postResponse.ok) {
-        const errorData = await postResponse.json();
-        alert(`Error: ${errorData.error || 'An unknown error occurred'}`);
-      }
-      const data = await postResponse.json();
+      const data = await loginRegister(url, userName, password);
       setLogin(data.logged);
-      await getSchedule();
+
+      const schedule = await getSchedule(userName);
+      setSelectedMeals(schedule);
     } catch (error) {
-      console.error('Error:', error);
+      alert('An error occurred: ' + error.message);
     }
-  };
-
-  const getSchedule = async () => {
-    const url = `http://localhost:3000/schedule/${encodeURIComponent(userName)}`;
-    try {
-      const response = await fetch(url);
-      const result = await response.json();
-      setSelectedMeals(result);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    }
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    await postForm();
-
   };
 
   const handleToggleMode = (event) => {

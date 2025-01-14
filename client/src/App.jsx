@@ -54,20 +54,10 @@ function App() {
     }
   }
 
-  const handleScheduleButtonClick = () => {
-    setCurrentTab('schedule');
+  const handleButtonClick = (tab) => {
+    setCurrentTab(tab);
     setSearchText('');
-  };
-
-  const handleShoppingListButtonClick = () => {
-    setCurrentTab('shoppingList');
-    setSearchText('');
-  };
-
-  const handleRecipesButtonClick = () => {
-    setCurrentTab('recipes');
-    setSearchText('');
-  };
+  }
 
   return (
     <div>
@@ -78,14 +68,14 @@ function App() {
           setUserName={setUserName}
           setSelectedMeals={setSelectedMeals} />
       ) : (
-        <div>
+        <div className='reactMenu'>
           <nav>
-            <button onClick={() => handleScheduleButtonClick()}>Schedule</button>
-            <button onClick={() => handleShoppingListButtonClick()}>Shopping List</button>
-            <button onClick={() => handleRecipesButtonClick()}>Recipes</button>
+            <button onClick={() => handleButtonClick('schedule')}>Schedule</button>
+            <button onClick={() => handleButtonClick('shoppingList')}>Shopping List</button>
+            <button onClick={() => handleButtonClick('recipes')}>Recipes</button>
           </nav>
-          <div>
-            {renderTab(currentTab)}
+          <div className="mainContent">
+            <div className="component"> {renderTab(currentTab)}</div>
           </div>
         </div>
       )}

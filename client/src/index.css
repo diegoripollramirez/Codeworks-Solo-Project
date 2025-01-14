@@ -1,24 +1,22 @@
 .loginForm {
-  max-width: 400px;
-  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: fixed;
   padding: 20px;
+  width: 250px;
   background-color: #f4f4f9;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.loginForm h2 {
-  text-align: center;
-}
-
-.loginForm .user,
-.loginForm .password {
-  margin-bottom: 15px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .loginForm label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   font-weight: bold;
   color: black;
 }
@@ -26,6 +24,7 @@
 .loginForm input {
   width: 100%;
   padding: 10px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
@@ -34,7 +33,9 @@
 .loginForm button {
   width: 100%;
   padding: 10px;
-  background-color: blue;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -42,63 +43,376 @@
   cursor: pointer;
 }
 
-.toggleButton {
-  width: 100%;
-  padding: 10px;
-  background-color: blue;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.loginForm button:hover,
-.toggleButton:hover{
+.loginForm button:hover{
   font-weight: bold;
 }
 
-
-
-
-
-
-.daysCalendar {
+.reactMenu {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  list-style-type: none;
-  padding: 0;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 0;
+  background-color: #f8f9fa;
+  padding: 20px 0;
 }
 
-.daysCalendar li {
-  margin: 10px;
-  width: calc(100% / 7 - 20px);
-  text-align: center;
-  background-color: #f4f4f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.reactMenu nav {
+  display: flex;
+  gap: 20px;
 }
 
-.daysCalendar h1 {
-  margin-bottom: 10px;
-}
-
-select, button {
-  margin-top: 10px;
-}
-
-button {
-  padding: 5px 10px;
+.reactMenu button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: blue;
-  color: white;
+.reactMenu button:hover {
+  font-weight: bold;
 }
 
-.saveScheduleButton{
-position: relative;
-left: 45%;
+.schedule h1 {
+  font-size: 2rem;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  color: black;
+  text-align: center;
+}
+
+.daysCalendar {
+  list-style: none;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.day {
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  padding: 20px;
+  width: 200px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.meal {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.daysCalendar h2 {
+  font-size: 1.2rem;
+  color: gray;
+  margin-bottom: 5px;
+}
+
+.recipeSelection {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  background-color: #f4f4f4;
+}
+
+.goToRecipeButton {
+  width: 100%;
+}
+
+.saveScheduleButton {
+  display: block;
+  width: 20%;
+  padding: 12px;
+  margin: 20px auto 0 auto;
+}
+
+.ingredient {
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.ingredient li {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  color: black;
+  font-size: 1.2rem;
+}
+
+.ingredient input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.5);
+  margin: 10px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.noList {
+  color: red;
+  font-size: 1.3rem;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.recipe {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+.searchField {
+  padding: 10px;
+  width: 93%;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.searchField:focus {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.ingredientsSection,
+.instructionsSection {
+  margin-bottom: 20px;
+}
+
+.ingredientsSection h3,
+.instructionsSection h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #34495e;
+}
+
+.ingredientsSection ul,
+.instructionsSection ol {
+  padding-left: 20px; /* Indentación para las listas */
+  font-size: 1rem;
+  line-height: 1.6;
+  color: gray;
+  min-height: 100px; /* Altura mínima uniforme para las listas */
+}
+
+.instructionsSection ol {
+  list-style: decimal; /* Para numeración ordenada */
+}
+
+.recipe ul,
+.recipe ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Botón de eliminar */
+.deleteRecipeButton {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.deleteRecipeButton:hover {
+  font-weight: bold;
+  background-color: #c0392b;
+}
+
+
+.newRecipeButton {
+  background-color: cornflowerblue;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.newRecipeButton:hover {
+  background-color: #3578e5;
+}
+
+.RecipeList ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.recipe h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: black;
+}
+
+.recipe h3 {
+  font-size: 1.2rem;
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+.recipe ul,
+.recipe ol {
+  margin-left: 20px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: gray;
+}
+
+.deleteRecipeButton{
+  background-color: #e74c3c !important;
+  width: 30%;
+}
+
+.deleteRecipeButton:hover {
+  font-weight: bold;
+}
+
+.newRecipe {
+  position: relative;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1000px;
+}
+
+.newRecipe h1 {
+  font-size: 2rem;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  color: black;
+  text-align: center;
+}
+
+.newRecipeForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.recipeSections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recipeSections > div {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #ffffff;
+}
+
+.recipeSections h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #34495e;
+}
+
+.formGroup {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.formGroup input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.formGroup button {
+  padding: 10px 15px;
+  background-color: #3578e5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.formGroup button:hover {
+  background-color: #285bb5;
+}
+
+.itemList {
+  margin-top: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+.itemList li {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.itemList li:last-child {
+  border-bottom: none;
+}
+
+.newRecipe > button {
+  margin-top: 20px;
+  background-color: #e74c3c;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.newRecipe > button:hover {
+  background-color: #c0392b;
 }
