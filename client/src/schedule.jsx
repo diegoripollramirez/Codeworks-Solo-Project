@@ -70,7 +70,7 @@ const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMea
                       const selectedRecipe = recipes.find(recipe => recipe._id === selectedMeals[dayIndex][mealIndex]?._id);
                       if (selectedRecipe) {
                         setSearchText(selectedRecipe.recipeName);
-                        setCurrentTab('recipes');
+                        setCurrentTab('recipeList');
                       }
                     }}
                   >

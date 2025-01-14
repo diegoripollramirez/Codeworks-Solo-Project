@@ -5,7 +5,8 @@ import { useState } from 'react';
 import Login from './login';
 import Schedule from './schedule';
 import ShoppingList from './shoppingList';
-import RecipesSection from './recipes';
+import RecipeList from './recipesList';
+import RecipeEdit from './recipesEdit';
 
 function App() {
   const [logged, setLogin] = useState(false);
@@ -41,14 +42,26 @@ function App() {
         selectedMeals={selectedMeals}
       />;
 
-    } else if (currentTab === 'recipes') {
-      return <RecipesSection
+    } else if (currentTab === 'recipeList') {
+      return <RecipeList
         recipes={recipes}
         setRecipes={setRecipes}
         userName={userName}
         searchText={searchText}
         setSearchText={setSearchText}
+        setCurrentTab={setCurrentTab}
       />;
+
+    } else if (currentTab === 'recipeEdit') {
+      return <RecipeEdit
+        recipes={recipes}
+        setRecipes={setRecipes}
+        userName={userName}
+        searchText={searchText}
+        setSearchText={setSearchText}
+        setCurrentTab={setCurrentTab}
+      />;
+
     } else {
       return null;
     }
@@ -72,7 +85,7 @@ function App() {
           <nav>
             <button onClick={() => handleButtonClick('schedule')}>Schedule</button>
             <button onClick={() => handleButtonClick('shoppingList')}>Shopping List</button>
-            <button onClick={() => handleButtonClick('recipes')}>Recipes</button>
+            <button onClick={() => handleButtonClick('recipeList')}>Recipes</button>
           </nav>
           <div className="mainContent">
             <div className="component"> {renderTab(currentTab)}</div>
