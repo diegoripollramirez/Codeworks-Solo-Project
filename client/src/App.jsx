@@ -44,12 +44,13 @@ function App() {
 
     } else if (currentTab === 'recipeList') {
       return <RecipeList
+        userName={userName}
+        setCurrentTab={setCurrentTab}
         recipes={recipes}
         setRecipes={setRecipes}
-        userName={userName}
         searchText={searchText}
         setSearchText={setSearchText}
-        setCurrentTab={setCurrentTab}
+
       />;
 
     } else if (currentTab === 'recipeEdit') {
@@ -57,8 +58,6 @@ function App() {
         recipes={recipes}
         setRecipes={setRecipes}
         userName={userName}
-        searchText={searchText}
-        setSearchText={setSearchText}
         setCurrentTab={setCurrentTab}
       />;
 

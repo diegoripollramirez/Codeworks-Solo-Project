@@ -3,9 +3,10 @@ import { useEffect } from 'react';
 import { postSchedule } from './services/userServices';
 import { getRecipes } from './services/recipeServices';
 
+const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const MEALS = ["Lunch", "Dinner"];
 
 const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMeals, setCurrentTab, setSearchText }) => {
-
 
   const fetchRecipes = async () => {
     try {
@@ -30,7 +31,6 @@ const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMea
     }
   };
 
-
   const handleSetSelectedMeals = (dayIndex, mealIndex, recipe) => {
     setSelectedMeals((prev) => {
       const updatedMeals = [...prev];
@@ -39,18 +39,15 @@ const schedule = ({ userName, recipes, setRecipes, selectedMeals, setSelectedMea
     });
   };
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const meals = ["Lunch", "Dinner"];
-
   return (
     <>
       <div className='schedule'>
         <h1 >Schedule</h1>
         <ul className='daysCalendar'>
-          {days.map((day, dayIndex) => (
+          {DAYS.map((day, dayIndex) => (
             <li className='day' key={day}>
               <h1>{day}</h1>
-              {meals.map((meal, mealIndex) => (
+              {MEALS.map((meal, mealIndex) => (
                 <div className='meal' key={`${day}-${meal}`}>
                   <h2>{meal}:</h2>
                   <select className='recipeSelection'

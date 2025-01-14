@@ -31,7 +31,7 @@ const login = async (req, res) => {
   try {
     const { userName, password } = req.body;
     //TODO sanitize user input
-    const user = await userModel.findOne({ 'userName': userName });
+    const user = await userModel.findOne({ userName });
     if (!user) {
       return res.status(400).json({ error: 'User not found in data base' });
     }

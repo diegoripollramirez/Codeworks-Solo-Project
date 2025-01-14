@@ -1,7 +1,7 @@
 import React from 'react'
 import { deleteRecipe } from './services/recipeServices';
 
-const recipeList = ({ setCurrentTab, recipes, setRecipes, searchText, setSearchText }) => {
+const recipeList = ({ userName, setCurrentTab, recipes, setRecipes, searchText, setSearchText }) => {
 
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.recipeName.toLowerCase().includes(searchText.toLowerCase())
@@ -12,13 +12,18 @@ const recipeList = ({ setCurrentTab, recipes, setRecipes, searchText, setSearchT
     setSearchText('');
   }
 
-  const deleteRecipeById = async (_id) => {
-    try {
-      await deleteRecipe(_id);
-      setRecipes((prev) => prev.filter((recipe) => recipe._id !== _id));
-    } catch (error) {
-      console.error("Error deleting the recipe:", error);
+  const deleteRecipeById = async (_id, author) => {
+    if (author == userName) {
+      try {
+        await deleteRecipe(_id);
+        setRecipes((prev) => prev.filter((recipe) => recipe._id !== _id));
+      } catch (error) {
+        console.error("Error deleting the recipe:", error);
+      }
+    } else {
+      alert("You are not allowed to delete someone else recipes")
     }
+
   };
 
   return (
@@ -70,7 +75,7 @@ const recipeList = ({ setCurrentTab, recipes, setRecipes, searchText, setSearchT
               <button
                 className="deleteRecipeButton"
                 onClick={() => {
-                  deleteRecipeById(recipe._id);
+                  deleteRecipeById(recipe._id, recipe.author);
                 }}
               >Delete
               </button>
